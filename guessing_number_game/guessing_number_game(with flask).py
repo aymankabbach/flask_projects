@@ -4,6 +4,7 @@ app=Flask(__name__)
 random_number=random.randint(1,100)
 attempts=5
 message=""
+winner=False
 game_over=False
 def check_game_over():
     global attempts
@@ -12,7 +13,7 @@ def check_game_over():
     else:
         return False
 def check(user_number):
-    global attempts
+    global attempts,winner
     if user_number<random_number:
         attempts=attempts-1
         message="too low"
@@ -22,6 +23,7 @@ def check(user_number):
         message="too high"
         return message
     else:
+        winner=True
         message="you get it right"
         return message
 @app.route('/', methods=['GET','POST'])
