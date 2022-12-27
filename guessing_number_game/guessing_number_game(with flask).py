@@ -28,10 +28,12 @@ def check(user_number):
         return message
 @app.route('/', methods=['GET','POST'])
 def home_page():
-    global message,game_over
+    global message,game_over,random_number
     if request.method == 'POST':
         message=check(int(request.form['userguess']))
         game_over=check_game_over()
+        if game_over:
+            return render_template("game_over.html",random_number=str(random_number))
         return render_template("home_page.html",attempts=str(attempts),message=message)
     return render_template("home_page.html",attempts=str(attempts),message=message)
 if __name__=="__main__":
