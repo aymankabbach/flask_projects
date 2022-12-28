@@ -26,9 +26,30 @@ def check(user_number):
         winner=True
         message="you get it right"
         return message
+def reset():
+    global attempts,random_number,message,winner,game_over
+    random_number=random.randint(1,100)
+    attempts=5
+    message=""
+    winner=False
+    game_over=False
 @app.route('/', methods=['GET','POST'])
-def home_page():
+def play():
     global message,game_over,random_number
+    if request.method == 'POST':
+        message=check(int(request.form['userguess']))
+        game_over=check_game_over()
+        if game_over:
+            return render_template("game_over.html",random_number=str(random_number))
+        elif winner:
+            return render_template("winning_page.html",message=message)
+        else:
+            return render_template("home_page.html",attempts=str(attempts),message=message)
+    return render_template("home_page.html",attempts=str(attempts),message=message)
+@app.route('/replay/', methods=['GET','POST'])
+def replay():
+    global message,game_over,random_number
+    reset()
     if request.method == 'POST':
         message=check(int(request.form['userguess']))
         game_over=check_game_over()
