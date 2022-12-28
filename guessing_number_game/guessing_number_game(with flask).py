@@ -34,7 +34,10 @@ def home_page():
         game_over=check_game_over()
         if game_over:
             return render_template("game_over.html",random_number=str(random_number))
-        return render_template("home_page.html",attempts=str(attempts),message=message)
+        elif winner:
+            return render_template("winning_page.html",message=message)
+        else:
+            return render_template("home_page.html",attempts=str(attempts),message=message)
     return render_template("home_page.html",attempts=str(attempts),message=message)
 if __name__=="__main__":
     app.run(debug=True)
