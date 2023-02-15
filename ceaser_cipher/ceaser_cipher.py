@@ -2,6 +2,7 @@ from flask import Flask,render_template,request
 app=Flask(__name__)
 converted_text=""
 shift=0
+message=""
 alphabet=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 def convert_text_to_array(text):
     array=[]
@@ -12,7 +13,7 @@ def coding_the_text(text,shift):
     array=convert_text_to_array(text)
     coded_array=[]
     for letter in array:
-        if letter in alphabet:
+        if letter.lower() in alphabet:
             if alphabet.index(letter)+shift>=len(alphabet):
                 coded_array.append(alphabet[alphabet.index(letter)-len(alphabet)+shift])
             else:
@@ -30,8 +31,18 @@ def code(text,shift):
     return convert_the_array_to_text(text,shift)
 @app.route('/', methods=['GET','POST'])
 def home():
+    global message,shift
     if request.method == 'POST':
-        return render_template("home_page.html", converted_text=code(request.form['usertext'],int(request.form['shift'])))
-    return render_template("home_page.html", converted_text=converted_text)
+        try:
+            shift=int(request.form['shift'])
+            if int((request.form['shift']))>0:
+                return render_template("home_page.html", converted_text=code(request.form['usertext'],int(request.form['shift'])))
+            elif int((request.form['shift']))<=0:
+                message="shift must be positive"
+                return render_template("home_page.html", converted_text=converted_text, message="")
+        except:
+            message="shift must be an integer"
+            return render_template("home_page.html", converted_text=converted_text,message=message)
+    return render_template("home_page.html", converted_text=converted_text,message=message)
 if __name__=="__main__":
     app.run(debug=True)
