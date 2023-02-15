@@ -8,8 +8,8 @@ def convert_text_to_array(text):
     for letter in text:
         array.append(letter)
     return array
-def coding_the_text(shift):
-    array=convert_text_to_array()
+def coding_the_text(text,shift):
+    array=convert_text_to_array(text)
     coded_array=[]
     for letter in array:
         if letter in alphabet:
@@ -20,15 +20,18 @@ def coding_the_text(shift):
         else:
             coded_array.append(letter)
     return coded_array
-def convert_the_list_to_a_Word(shift):
-    coded_array=coding_the_text(shift)
-    coded_word=coded_array[0]
-    for letter in range(len(coded_array)-1):
-        coded_word+=letter
-    return coded_word
-@app.route('/')
+def convert_the_array_to_text(text,shift):
+    coded_array=coding_the_text(text,shift)
+    coded_text=coded_array[0]
+    for letter in range(1,len(coded_array)):
+        coded_text+=coded_array[letter]
+    return coded_text
+def code(text,shift):
+    return convert_the_array_to_text(text,shift)
+@app.route('/', methods=['GET','POST'])
 def home():
-    return render_template("home_page.html")
-
+    if request.method == 'POST':
+        return render_template("home_page.html", converted_text=code(request.form['usertext'],int(request.form['shift'])))
+    return render_template("home_page.html", converted_text=converted_text)
 if __name__=="__main__":
     app.run(debug=True)
